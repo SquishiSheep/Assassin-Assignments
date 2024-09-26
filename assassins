@@ -1,0 +1,54 @@
+import tkinter as tk
+import random
+
+def randomize_assignments():
+    names = ["Diego", "Rachel", "Luis", "Javi"]
+    assignments = names.copy()
+
+    # Shuffle until no button is assigned its own name and no two-way assignments
+    valid_assignment = False
+    while not valid_assignment:
+        random.shuffle(assignments)
+        valid_assignment = all(buttons[i]["text"] != assignments[i] and 
+                               assignments[buttons.index(buttons_dict[assignments[i]])] != buttons[i]["text"]
+                               for i in range(len(buttons)))
+
+    # Assign the shuffled names to buttons
+    for i, button in enumerate(buttons):
+        button.config(command=lambda name=assignments[i]: show_assignment(name))
+        button_assignments[button["text"]] = assignments[i]
+
+def show_assignment(name):
+    # Update label or show a message with the assigned name
+    assignment_label.config(text=f"Assigned: {name}")
+
+# Create the main window
+root = tk.Tk()
+root.title("Randomize Button Assignments")
+
+# Button names and assignments
+button_names = ["Diego", "Rachel", "Luis", "Javi"]
+button_assignments = {}
+
+# Create buttons
+buttons = []
+buttons_dict = {}
+for name in button_names:
+    button = tk.Button(root, text=name)
+    button.pack(pady=10)
+    buttons.append(button)
+    buttons_dict[name] = button
+
+# Create and pack the randomize button
+randomize_button = tk.Button(root, text="Randomize", command=randomize_assignments)
+randomize_button.pack(pady=20)
+
+# Label to display assignments
+assignment_label = tk.Label(root, text="Click a button to see its assignment")
+assignment_label.pack(pady=10)
+
+# Initialize button assignments
+randomize_assignments()
+
+# Start the GUI
+root.mainloop()
